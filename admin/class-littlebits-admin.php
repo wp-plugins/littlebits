@@ -76,7 +76,7 @@ class Littlebits_Admin {
 				add_settings_field('access_token', 'Access Token', array( $this, 'device_access_token'), 'littlebits_device', 'modules_section');
 
 			add_settings_section('integrations', 'Integrations', array( $this, 'integrations_input'), 'littlebits_integration');
-				add_settings_field('integration', 'Select', array( $this, 'integration_input'), 'littlebits_integration', 'integrations');
+				add_settings_field('integration', 'New Comments', array( $this, 'integration_input'), 'littlebits_integration', 'integrations');
 	}
 
 	public function modules_section_text() {
