@@ -69,7 +69,7 @@ class Littlebits {
 	public function __construct() {
 
 		$this->littlebits = 'littlebits';
-		$this->version = '1.1.1';
+		$this->version = '1.1.2';
 
 		$this->load_dependencies();
 		$this->set_locale();
@@ -168,9 +168,9 @@ class Littlebits {
 
 		$plugin_public = new Littlebits_Public( $this->get_littlebits(), $this->get_version() );
 
-		$options = get_option('littlebits_config');
-		if( isset($options['integration_trigger'])) {
-			switch($options['integration_trigger']) {
+		$options = get_option( 'littlebits_config' );
+		if( isset( $options['integration_trigger'] ) ) {
+			switch( $options['integration_trigger'] ) {
 				case 'woocommerce_new_order':
 					$this->loader->add_action( 'woocommerce_new_order', $plugin_public, 'output' );
 				break;
@@ -186,7 +186,6 @@ class Littlebits {
 				 * break;
 				 */
 			}
-			error_log($options['integration_trigger'], 0);
 		}
 	}
 
