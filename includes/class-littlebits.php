@@ -69,7 +69,7 @@ class Littlebits {
 	public function __construct() {
 
 		$this->littlebits = 'littlebits';
-		$this->version = '1.1';
+		$this->version = '1.1.1';
 
 		$this->load_dependencies();
 		$this->set_locale();
