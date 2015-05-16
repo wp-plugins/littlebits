@@ -69,7 +69,7 @@ class Littlebits {
 	public function __construct() {
 
 		$this->littlebits = 'littlebits';
-		$this->version = '1.0.1';
+		$this->version = '1.1';
 
 		$this->load_dependencies();
 		$this->set_locale();
@@ -169,14 +169,25 @@ class Littlebits {
 		$plugin_public = new Littlebits_Public( $this->get_littlebits(), $this->get_version() );
 
 		$options = get_option('littlebits_config');
-		if($options['integration'] != FALSE) {
-			switch($options['integration']) {
-				case '1':
-					$this->loader->add_action( 'comment_post', $plugin_public, 'new_comment_indicator' );
+		if( isset($options['integration_trigger'])) {
+			switch($options['integration_trigger']) {
+				case 'woocommerce_new_order':
+					$this->loader->add_action( 'woocommerce_new_order', $plugin_public, 'output' );
 				break;
+				case 'comment_post':
+					$this->loader->add_action( 'comment_post', $plugin_public, 'output' );
+				break;
+				/*
+				 * Use the following example to build additional integrations using action hooks!
+				 * Also check /admin/class-littlebits-admin.php
+				 * 
+				 * case 'ACTION_HOOK':
+				 *	$this->loader->add_action( 'ACTION_HOOK', $plugin_public, 'output' );
+				 * break;
+				 */
 			}
+			error_log($options['integration_trigger'], 0);
 		}
-
 	}
 
 	/**

@@ -76,7 +76,8 @@ class Littlebits_Admin {
 				add_settings_field('access_token', 'Access Token', array( $this, 'device_access_token'), 'littlebits_device', 'modules_section');
 
 			add_settings_section('integrations', 'Integrations', array( $this, 'integrations_input'), 'littlebits_integration');
-				add_settings_field('integration', 'New Comments', array( $this, 'integration_input'), 'littlebits_integration', 'integrations');
+				add_settings_field('integration_trigger', 'Select A Trigger', array( $this, 'integration_input'), 'littlebits_integration', 'integrations');
+				add_settings_field('integration_output', 'Select An Output', array( $this, 'integration_output'), 'littlebits_integration', 'integrations');
 	}
 
 	public function modules_section_text() {
@@ -85,12 +86,12 @@ class Littlebits_Admin {
 
 	public function device_id_string() {
 		$options = get_option('littlebits_config');
-		echo '<input name="littlebits_config[device_id]" id="plugin_text_string" type="text" value="'. esc_attr( $options['device_id'] ) .'" size="13" />';
+		echo '<input name="littlebits_config[device_id]" id="device-id" type="text" value="'. esc_attr( $options['device_id'] ) .'" size="13" />';
 	}
 
 	public function device_access_token() {
 		$options = get_option('littlebits_config');
-		echo '<input name="littlebits_config[access_token]" id="plugin_text_string" type="text" value="'. esc_attr( $options['access_token'] ) .'" size="72" />';
+		echo '<input name="littlebits_config[access_token]" id="access-token" type="text" value="'. esc_attr( $options['access_token'] ) .'" size="72" />';
 	}
 
 	public function integrations_input() {
@@ -99,7 +100,45 @@ class Littlebits_Admin {
 
 	public function integration_input() {
 		$options = get_option('littlebits_config');
-		echo '<input name="littlebits_config[integration]" id="plugin_text_string" type="checkbox" value="1" ' . checked( 1, $options['integration'], false ) . ' />';
+		if ( !isset( $options['integration_trigger'] ) ) {
+			$options['integration_trigger'] = '';
+		}
+		echo '<select id="time_options" name="littlebits_config[integration_trigger]">';
+			echo '<option value="default">Select...</option>';
+			echo '<option value="comment_post"' . selected( $options['integration_trigger'], 'comment_post', false) . '>New Comment</option>';
+			echo '<option value="woocommerce_new_order"' . selected( $options['integration_trigger'], 'woocommerce_new_order', false) . '>New Order</option>';
+			/* 
+			 * Use the following example to build additional integrations using action hooks!
+			 * Also check /includes/class-littlebits.php
+			 *
+			 * '<option value="ACTION_HOOK"' . selected( $options['integration_trigger'], 'ACTION_HOOK', false) . '>NAME OF TRIGGER TO DISPLAY</option>';
+			 */ 
+		echo '</select>';
 	}
 
+	/**
+	 * Callback function for output fields using the Settings API
+	 *
+	 * @since    1.1
+	 */
+	public function integration_output() {
+		$options = get_option('littlebits_config');
+		if ( !isset( $options['integration_output'] ) ) {
+			$options['integration_output'] = '';
+		}
+		
+		if ( !isset( $options['output_percentage'] ) || empty($options['output_percentage'] ) ) {
+			$options['output_percentage'] = '100';
+		}
+		
+		if ( !isset( $options['output_duration'] ) || empty($options['output_duration'] ) ) {
+			$options['output_duration'] = '1000';
+		}
+		
+		echo 'Output Percentage: <input name="littlebits_config[output_percentage]" id="output_percentage" type="number" value="'. esc_attr( $options['output_percentage'] ) .'" />%';
+		echo '<br />';
+		echo 'Duration: <input name="littlebits_config[output_duration]" id="output_duration" type="number" value="'. esc_attr( $options['output_duration'] ) .'" />ms';
+
+	}
+	
 }

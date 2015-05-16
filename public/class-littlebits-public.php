@@ -54,12 +54,15 @@ class Littlebits_Public {
 
 	}
 
-	public function new_comment_indicator() {
+	public function output() {
 		$options = get_option('littlebits_config');
+		$output_percentage = !empty( $options['output_percentage'] ) ? $options['output_percentage'] : 100;
+		$output_duration = !empty( $options['output_duration'] ) ? $options['output_duration'] : 1000;
+
 		$response = wp_remote_post( 'https://api-http.littlebitscloud.cc/devices/'.$options['device_id'].'/output', array(
 			'method' => 'POST',
 			'headers' => array( 'Authorization' => 'Bearer '. $options['access_token'] .'', 'Accept' => 'application/nvd.littlebits.v2+json'),
-			'body' => array( 'percent' => 100, 'duration_ms' => 5000 ),
+			'body' => array( 'percent' => $output_percentage, 'duration_ms' => $output_duration ),
 		    )
 		);
 
